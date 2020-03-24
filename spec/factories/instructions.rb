@@ -1,3 +1,5 @@
+# frozen_literal_string: true
+
 FactoryBot.define do
   factory :instruction do
     structure { assocation(:structure) }
