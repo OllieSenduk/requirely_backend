@@ -1,6 +1,8 @@
+# frozen_literal_string: true
+
 FactoryBot.define do
   factory :structure do
-    name { "MyString" }
-    user { nil }
+    name { 'User Stories' }
+    user { association(:user) }
   end
 end
