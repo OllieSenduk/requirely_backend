@@ -1,8 +1,8 @@
 class CreateInstructions < ActiveRecord::Migration[6.0]
   def change
     create_table :instructions do |t|
-      t.references :structure, null: false, foreign_key: true
-      t.references :instruction, null: false, foreign_key: true
+      t.references :structure, foreign_key: true
+      t.references :instruction, foreign_key: true
       t.string :name
       t.string :content
 
