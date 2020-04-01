@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_142200) do
+ActiveRecord::Schema.define(version: 2020_03_24_174904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(version: 2018_11_02_142200) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "blocks", force: :cascade do |t|
+    t.bigint "instruction_id", null: false
+    t.bigint "project_id", null: false
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["instruction_id"], name: "index_blocks_on_instruction_id"
+    t.index ["project_id"], name: "index_blocks_on_project_id"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -66,6 +76,35 @@ ActiveRecord::Schema.define(version: 2018_11_02_142200) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "instructions", force: :cascade do |t|
+    t.bigint "structure_id"
+    t.bigint "instruction_id"
+    t.string "name"
+    t.string "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["instruction_id"], name: "index_instructions_on_instruction_id"
+    t.index ["structure_id"], name: "index_instructions_on_structure_id"
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name"
+    t.bigint "structure_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["structure_id"], name: "index_projects_on_structure_id"
+    t.index ["user_id"], name: "index_projects_on_user_id"
+  end
+
+  create_table "structures", force: :cascade do |t|
+    t.string "name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_structures_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -92,4 +131,11 @@ ActiveRecord::Schema.define(version: 2018_11_02_142200) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "blocks", "instructions"
+  add_foreign_key "blocks", "projects"
+  add_foreign_key "instructions", "instructions"
+  add_foreign_key "instructions", "structures"
+  add_foreign_key "projects", "structures"
+  add_foreign_key "projects", "users"
+  add_foreign_key "structures", "users"
 end
